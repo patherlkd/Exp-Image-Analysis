@@ -8,10 +8,10 @@ from PIL import ImageFilter
 import time
 import cluster
 
-folder = "0.375_uM_epi/"
+folder = "Folder/"
 
-basename = 'POPCPG8_'
-extension = '.tiff'
+basename = 'images_' 
+extension = '.tiff' # as an example
 
 image_index_min = 3
 image_index_max = 80
@@ -22,7 +22,7 @@ np_im_arrays = []
 for i in range(image_index_min,image_index_max+1):
 	image = Image.open(folder+basename+"{:04d}".format(i)+extension).convert('L')
 	images.append(image.filter(ImageFilter.MedianFilter(size=9))) # apply a median filter
-	images[-1].filter(ImageFilter.GaussianBlur(radius=4))
+	images[-1].filter(ImageFilter.GaussianBlur(radius=4)) # apply a Gaussian blur
 	np_im_arrays.append(np.array(image))
 
 area_per_pixel = 4.0/(np_im_arrays[-1].shape[0]*np_im_arrays[-1].shape[1]) # units of micro metres squared
@@ -38,6 +38,8 @@ plt.xlabel('Color intensity values',fontsize=15)
 plt.ylabel('Frequency',fontsize=15)
 plt.show()
 
+
+# 'thinned' and 'channels' are just example names of features in the images.
 
 ## write down the approx min and max intensity/color values for the objects
 
@@ -86,28 +88,7 @@ print("Done.")
 
 ## Analysing total coverage of the features
 
-# channel_coverages = []
-# thinned_coverages = []
-
 frames = range(len(np_im_arrays))
-
-# for np_array in np_im_arrays:
-# 	channel_array = ImLD.grab_intensity_band(np_array,channelIn_min,channelIn_max)
-
-# 	channel_coverages.append(ImLD.total_surface_coverage(channel_array))
-
-# 	thinned_array = ImLD.grab_intensity_band(np_array,thinnedIn_min,thinnedIn_max)
-
-# 	thinned_coverages.append(ImLD.total_surface_coverage(thinned_array))
-
-# plt.plot(frames,channel_coverages,label="Cracks")
-
-# plt.plot(frames,thinned_coverages,label="Islands")
-
-# plt.xlabel("Frame")
-# plt.ylabel("Coverage (ratio to total area)")
-# plt.legend()
-# plt.show()
 
 ## clustering -> no. of thinned and channels against time
 
@@ -207,16 +188,4 @@ for chan_traj in chan_trajectories:
 	cnt += 1
 
 print("Done.")
-
-# print("thinned numbers: "+str(thinned_numbers[-1]))
-
-# plt.plot(frames,channel_numbers,label="Cracks")
-
-# plt.plot(frames,thinned_numbers,label="Islands")
-
-# plt.xlabel("Frame")
-# plt.ylabel("Total number")
-# plt.legend()
-# #plt.savefig('Numbers_of_features_against_time_0375uM.png')
-# plt.show()
 
